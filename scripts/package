@@ -19,6 +19,16 @@ fi
 cp ../bin/rke .
 
 IMAGE=${REPO}/rke:${TAG}
-docker build -t ${IMAGE} .
-echo ${IMAGE} > ../dist/images
-echo Built ${IMAGE}
+#docker build -t ${IMAGE} .
+#echo ${IMAGE} > ../dist/images
+#echo Built ${IMAGE}
+if dapper -d --build -f Dockerfile -- -t ${IMAGE} .; then
+    echo ${IMAGE} > ../dist/images
+    echo Built ${IMAGE}
+elif [ "$?" != "42" ]; then
+    exit 1
+else
+    echo "Skipping ${TAG}"
+    exit 0
+fi
+
